@@ -1,0 +1,5 @@
+# One PyPI distribution per line. Blank lines and # comments are ignored.
+# Add yours at any position -- the order here does not matter.
+#
+# The name is the distribution on PyPI, not the module it provides:
+#   pymcu-lib-dht11        (installs the `dht11` module)

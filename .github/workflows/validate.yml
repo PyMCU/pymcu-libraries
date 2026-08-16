@@ -1,0 +1,71 @@
+# Answers on a submission PR: is this a PyMCU library, and where does it build?
+#
+# Nothing here trusts what the manifest says. The library is installed, checked,
+# and compiled for one chip per architecture -- including the ones it does not
+# claim, which is the only way to tell "does not support ARM" from "nobody
+# updated supports.arch".
+name: validate
+
+on:
+  pull_request:
+    paths:
+      - libraries.txt
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: astral-sh/setup-uv@v4
+
+      - name: Work out what this PR adds
+        id: added
+        run: |
+          git fetch origin "${{ github.base_ref }}" --depth=1
+          # Only the added lines: a PR must not be able to smuggle in a
+          # measurement of everything else as if it were its own.
+          git diff "origin/${{ github.base_ref }}" -- libraries.txt \
+            | grep '^+[^+]' | sed 's/^+//' | sed 's/#.*//' | tr -d ' ' \
+            | grep -v '^$' > added.txt || true
+          echo "count=$(wc -l < added.txt | tr -d ' ')" >> "$GITHUB_OUTPUT"
+          cat added.txt
+
+      - name: Nothing added
+        if: steps.added.outputs.count == '0'
+        run: |
+          echo "This PR adds no distribution to libraries.txt." >&2
+          exit 1
+
+      - name: Install the compiler
+        run: uv pip install --system --prerelease=allow "pymcu-compiler[all]"
+
+      - name: Measure the submissions
+        run: |
+          pymcu index build --from added.txt --venv .submission-venv \
+            --output submission.json --strict
+
+      - name: Report
+        if: always()
+        run: |
+          test -f submission.json || exit 0
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          data = json.load(open("submission.json"))
+          for lib in data["libraries"]:
+              print(f"### {lib['name']} {lib['version']}\n")
+              print("| chip | build | flash |")
+              print("|---|---|---|")
+              for chip, r in sorted(lib["measured"]["targets"].items()):
+                  print(f"| {chip} | {r['build']} | {r.get('flash', '-')} |")
+              for warning in lib["warnings"]:
+                  print(f"\n> {warning}")
+              print()
+          PY

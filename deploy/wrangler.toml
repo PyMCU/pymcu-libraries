@@ -1,0 +1,14 @@
+# Worker that serves the library index from R2.
+#   npx wrangler deploy -c deploy/wrangler.toml
+# Requires: R2 bucket `pymcu-libraries` created and the pymcu.org zone in the account.
+name = "pymcu-libraries"
+main = "worker.js"
+compatibility_date = "2026-08-01"
+
+routes = [
+  { pattern = "libraries.pymcu.org", custom_domain = true },
+]
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "pymcu-libraries"
