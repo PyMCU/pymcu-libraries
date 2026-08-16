@@ -29,6 +29,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Checked before anything expensive runs, and before the mirror commit --
+      # a missing or empty secret would otherwise surface as an opaque failure
+      # from the AWS CLI, after the whole measurement had already happened.
+      - name: Check the publishing secrets
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          missing=""
+          for name in R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY CLOUDFLARE_API_TOKEN; do
+            if [ -z "${!name}" ]; then
+              missing="$missing $name"
+            fi
+          done
+          if [ -n "$missing" ]; then
+            echo "Missing or empty repository secrets:$missing" >&2
+            echo "Set them with: gh secret set <NAME> --repo PyMCU/pymcu-libraries" >&2
+            exit 1
+          fi
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
