@@ -11,6 +11,11 @@ on:
     branches: [main]
     paths:
       - libraries.txt
+      # Changing the pipeline runs it. Without this, the fix for a broken
+      # regeneration sat in main unverified: the run that had published two
+      # working libraries as `broken` was still the latest one, and nothing
+      # re-measured until someone edited the list or a week went by.
+      - .github/workflows/publish.yml
   schedule:
     # Weekly, early Monday UTC.
     - cron: "17 4 * * 1"
