@@ -49,11 +49,11 @@
           },
           "pic16f877a": {
             "build": "failed",
-            "detail": "/tmp/tmpo7nx7iff/example/src/main.py:47:1: error: CompileError: DHT timing is only implemented for AVR"
+            "detail": "/tmp/tmppk2eb57f/example/src/main.py:47:1: error: CompileError: DHT timing is only implemented for AVR"
           },
           "rp2040": {
             "build": "failed",
-            "detail": "/tmp/tmpxgnj71dt/example/src/main.py:-1:1: error: TypeError: cannot shift by the string \"PB5\" -- a number is expected here. This usually means a name was passed where a number belongs (for example a p"
+            "detail": "/tmp/tmpccb0viso/example/src/main.py:-1:1: error: TypeError: cannot shift by the string \"PB5\" -- a number is expected here. This usually means a name was passed where a number belongs (for example a p"
           }
         }
       },
@@ -106,11 +106,11 @@
           },
           "pic16f877a": {
             "build": "failed",
-            "detail": "/tmp/tmp89ygb_79/example/src/main.py:29:1: error: CompileError: NeoPixel timing is only implemented for AVR"
+            "detail": "/tmp/tmphb2ymm7k/example/src/main.py:29:1: error: CompileError: NeoPixel timing is only implemented for AVR"
           },
           "rp2040": {
             "build": "failed",
-            "detail": "/tmp/tmpmvr3iry5/example/src/main.py:29:1: error: CompileError: NeoPixel timing is only implemented for AVR"
+            "detail": "/tmp/tmpzrr6serj/example/src/main.py:29:1: error: CompileError: NeoPixel timing is only implemented for AVR"
           }
         }
       },
