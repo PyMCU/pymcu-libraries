@@ -1,7 +1,7 @@
 {
   "v": 1,
   "generated": "2026-08-17",
-  "compiler": "0.1.0a7",
+  "compiler": "0.1.0a8",
   "libraries": [
     {
       "name": "dht",
@@ -40,7 +40,7 @@
         "language_level": 1
       },
       "measured": {
-        "compiler": "0.1.0a7",
+        "compiler": "0.1.0a8",
         "date": "2026-08-17",
         "targets": {
           "atmega328p": {
@@ -48,11 +48,11 @@
             "flash": 1014
           },
           "pic16f877a": {
-            "build": "failed",
+            "build": "unsupported",
             "detail": "CompileError: DHT timing is only implemented for AVR"
           },
           "rp2040": {
-            "build": "failed",
+            "build": "unsupported",
             "detail": "TypeError: cannot shift by the string \"PB5\" -- a number is expected here. This usually means a name was passed where a number belongs (for example a pin name instead of a pin number)."
           }
         }
@@ -97,7 +97,7 @@
         "language_level": 1
       },
       "measured": {
-        "compiler": "0.1.0a7",
+        "compiler": "0.1.0a8",
         "date": "2026-08-17",
         "targets": {
           "atmega328p": {
@@ -105,11 +105,11 @@
             "flash": 924
           },
           "pic16f877a": {
-            "build": "failed",
+            "build": "unsupported",
             "detail": "CompileError: NeoPixel timing is only implemented for AVR"
           },
           "rp2040": {
-            "build": "failed",
+            "build": "unsupported",
             "detail": "CompileError: NeoPixel timing is only implemented for AVR"
           }
         }
