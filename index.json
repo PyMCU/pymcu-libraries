@@ -44,23 +44,21 @@
         "date": "2026-08-17",
         "targets": {
           "atmega328p": {
-            "build": "failed",
-            "detail": "/tmp/tmp53lhthfb/example/src/main.py:0:1: error: ImportError: Module not found: dht -- if it is a PyMCU library, install it into this project with `pymcu install dht`"
+            "build": "ok",
+            "flash": 1014
           },
           "pic16f877a": {
             "build": "failed",
-            "detail": "/tmp/tmpave5ock1/example/src/main.py:0:1: error: ImportError: Module not found: dht -- if it is a PyMCU library, install it into this project with `pymcu install dht`"
+            "detail": "CompileError: DHT timing is only implemented for AVR"
           },
           "rp2040": {
             "build": "failed",
-            "detail": "/tmp/tmpxea1km4p/example/src/main.py:0:1: error: ImportError: Module not found: dht -- if it is a PyMCU library, install it into this project with `pymcu install dht`"
+            "detail": "TypeError: cannot shift by the string \"PB5\" -- a number is expected here. This usually means a name was passed where a number belongs (for example a pin name instead of a pin number)."
           }
         }
       },
-      "status": "broken",
-      "warnings": [
-        "declares avr but the example does not build for atmega328p: /tmp/tmp53lhthfb/example/src/main.py:0:1: error: ImportError: Module not found: dht -- if it is a PyMCU library, install it into this project with `pymcu install dht`"
-      ]
+      "status": "active",
+      "warnings": []
     },
     {
       "name": "neopixel",
@@ -103,23 +101,21 @@
         "date": "2026-08-17",
         "targets": {
           "atmega328p": {
-            "build": "failed",
-            "detail": "/tmp/tmp5tzkv4ad/example/src/main.py:0:1: error: ImportError: Module not found: neopixel -- if it is a PyMCU library, install it into this project with `pymcu install neopixel`"
+            "build": "ok",
+            "flash": 924
           },
           "pic16f877a": {
             "build": "failed",
-            "detail": "/tmp/tmpipvnw28d/example/src/main.py:0:1: error: ImportError: Module not found: neopixel -- if it is a PyMCU library, install it into this project with `pymcu install neopixel`"
+            "detail": "CompileError: NeoPixel timing is only implemented for AVR"
           },
           "rp2040": {
             "build": "failed",
-            "detail": "/tmp/tmpoutu9b_2/example/src/main.py:0:1: error: ImportError: Module not found: neopixel -- if it is a PyMCU library, install it into this project with `pymcu install neopixel`"
+            "detail": "CompileError: NeoPixel timing is only implemented for AVR"
           }
         }
       },
-      "status": "broken",
-      "warnings": [
-        "declares avr but the example does not build for atmega328p: /tmp/tmp5tzkv4ad/example/src/main.py:0:1: error: ImportError: Module not found: neopixel -- if it is a PyMCU library, install it into this project with `pymcu install neopixel`"
-      ]
+      "status": "active",
+      "warnings": []
     }
   ]
 }

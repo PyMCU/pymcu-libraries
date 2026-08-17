@@ -57,11 +57,48 @@ jobs:
 
       - uses: astral-sh/setup-uv@v4
 
-      - name: Install the compiler
-        run: uv pip install --system --prerelease=allow "pymcu-compiler[all]"
+      # The compiler goes INSIDE the environment being measured, and the
+      # measuring is done by that copy of pymcu. With the compiler installed
+      # --system and the libraries in a separate venv, the two cannot see each
+      # other: every example failed with "Module not found: dht", and the run
+      # published both libraries as `broken` while they built fine everywhere
+      # else. [all] because the matrix states which architectures a library
+      # supports, and a backend this runner lacks would be recorded as the
+      # library not supporting it.
+      - name: Prepare the measuring environment
+        run: |
+          uv venv .index-venv
+          uv pip install --python .index-venv --prerelease=allow "pymcu-compiler[all]"
+          grep -v '^\s*#' libraries.txt | grep -v '^\s*$' | while read -r dist; do
+            uv pip install --python .index-venv --prerelease=allow "$dist"
+          done
 
       - name: Build the index
-        run: pymcu index build --from libraries.txt --venv .index-venv --output index.json
+        run: .index-venv/bin/pymcu index build --venv .index-venv --output index.json
+
+      # A regeneration in which nothing builds anywhere is a broken pipeline,
+      # not a catalogue of broken libraries. Publishing it marks every entry
+      # `broken`, and `pymcu install` then warns users away from libraries
+      # that work -- which is exactly what happened the first time this ran.
+      - name: Refuse an index in which nothing builds
+        run: |
+          python - <<'CHECK'
+          import json, sys
+          index = json.load(open("index.json"))
+          entries = index["libraries"]
+          if not entries:
+              sys.exit("index.json lists no libraries at all")
+          building = [
+              e["name"] for e in entries
+              if any(t.get("build") == "ok" for t in e["measured"]["targets"].values())
+          ]
+          print(f"{len(building)}/{len(entries)} libraries build somewhere")
+          if not building:
+              sys.exit(
+                  "No library built for any chip. That is a fault of this "
+                  "pipeline, not of the libraries; refusing to publish."
+              )
+          CHECK
 
       - name: Commit the mirror
         run: |

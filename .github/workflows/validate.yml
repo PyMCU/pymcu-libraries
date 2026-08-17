@@ -44,12 +44,22 @@ jobs:
           echo "This PR adds no distribution to libraries.txt." >&2
           exit 1
 
-      - name: Install the compiler
-        run: uv pip install --system --prerelease=allow "pymcu-compiler[all]"
+      # The compiler goes inside the environment being measured, and measures
+      # from there. Installed --system, with the submission in a separate venv,
+      # the two cannot see each other and every example fails with "Module not
+      # found" -- which would reject a perfectly good submission.
+      - name: Prepare the measuring environment
+        run: |
+          uv venv .submission-venv
+          uv pip install --python .submission-venv --prerelease=allow "pymcu-compiler[all]"
+          while read -r dist; do
+            [ -n "$dist" ] || continue
+            uv pip install --python .submission-venv --prerelease=allow "$dist"
+          done < added.txt
 
       - name: Measure the submissions
         run: |
-          pymcu index build --from added.txt --venv .submission-venv \
+          .submission-venv/bin/pymcu index build --venv .submission-venv \
             --output submission.json --strict
 
       - name: Report
