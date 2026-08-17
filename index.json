@@ -1,6 +1,121 @@
 {
   "v": 1,
-  "generated": "",
-  "compiler": "",
-  "libraries": []
+  "generated": "2026-08-17",
+  "compiler": "0.1.0a6",
+  "libraries": [
+    {
+      "name": "dht",
+      "distribution": "pymcu-lib-dht",
+      "version": "0.1.0",
+      "summary": "DHT11 / DHT22 / DHT21 temperature & humidity sensor driver",
+      "repository": "https://github.com/PyMCU/pymcu-lib-dht",
+      "license": "MIT",
+      "categories": [
+        "sensor",
+        "environment"
+      ],
+      "provides": [
+        "dht",
+        "adafruit_dht",
+        "_dht"
+      ],
+      "readme": "# pymcu-lib-dht\n\nDHT-family temperature & humidity sensor driver for [PyMCU](https://pymcu.org) \u2014 DHT11,\nDHT22/AM2302, and DHT21/AM2301 \u2014 compiled to native machine code, with no interpreter\non the chip.\n\n```bash\npymcu install dht\n```\n\n## Two module names, three APIs, one driver\n\nWhich module name and shape you get depends on the `stdlib` layer your project\ndeclares. Native and MicroPython both import from `dht` \u2014 that is real MicroPython's\nown module name; CircuitPython imports from `adafruit_dht`, matching that ecosystem's\nreal name instead.\n\n**Native** (`stdlib` unset):\n\n```python\nfrom dht import DHT11, DHT22   # DHT21 is also available: an alias of DHT22\n\nsensor = DHT22(\"PD2\")\nsensor.measure()\nhumidity = sensor.humidity()        # uint16, tenths of %RH: 653 = 65.3\ntemperature = sensor.temperature()  # int16, tenths of C: -55 = -5.5\n```\n\n**MicroPython** (`stdlib = [\"micropython\"]`) \u2014 a MicroPython script, unchanged:\n\n```python\nfrom machine import Pin\nfrom dht import DHT11\n\nsensor = DHT11(Pin(2))\nsensor.measure()\nprint(sensor.humidity(), sensor.temperature())\n```\n\n**CircuitPython** (`stdlib = [\"circuitpython\"]`) \u2014 an `adafruit_dht` script, unchanged:\n\n```python\nimport board\nfrom adafruit_dht import DHT22\n\nsensor = DHT22(board.D2)\nprint(sensor.temperature, sensor.humidity)   # float, matching upstream\n```\n\nNone of those files contains a single `match __CHIP__.arch`: the layer adapters are\nplain Python written against each API as it is documented upstream. Everything that has\nto know about a chip lives in one private module, `_dht.core`, and the compiler folds\nit away; everything that has to know what a byte *means* for a given sensor model lives\nin `_dht.decode`, which needs no chip dispatch of its own.\n\n## DHT11 vs. DHT22 vs. DHT21\n\n- **DHT11** \u2014 integer %RH and C, no fractional resolution, no negative temperatures.\n  Cheapest, and the smallest to compile against (see below).\n- **DHT22/AM2302** \u2014 one decimal digit, negative temperatures, wider and more accurate\n  range.\n- **DHT21/AM2301** \u2014 the same protocol and byte layout as the DHT22. This library\n  exposes it as `DHT21 = DHT22`, a plain alias, not a second implementation.\n\nSee `docs/sensors.md` for the full comparison and `docs/protocol.md` for the byte-level\ndifferences.\n\n## Cost\n\nThe whole driver is `@inline`: no object is allocated on the device, and a read\ncompiles down to the bit-banging routine at the call site (or a single shared\nsubroutine where the compiler's outliner judges that cheaper). Nothing is held in\nSRAM between reads.\n\n`dht.py` and `compat/micropython/dht.py` report tenths as a plain `int16`/`uint16`\nrather than a `float`, on both DHT11 and DHT22: two isolated probes measured on the\nemulator put a `float`-returning driver at 4.9x the flash of an `int16`-tenths one\n(680 vs. 140 bytes) for the same logic. See `docs/accuracy.md` for the measurement.\n`adafruit_dht.py` is the one exception \u2014 it matches `adafruit_dht`'s real `float`\nsignature on purpose, since fidelity to that upstream API is the point of the module.\n\nMeasured figures per chip are published in the\n[library index](https://libraries.pymcu.org/index.json).\n\n## Supported hardware\n\nThe whole DHT family on **AVR** (ATmega328P and friends), data line on `PD2`-`PD7`.\nTiming is measured on the AVR emulator rather than assumed \u2014 see\n`tests/test_timing.py` for the start-signal and bit-decode-threshold checks.\n\nOther architectures raise a compile-time error rather than returning something that\nlooks like it worked. Ports are welcome: `_dht/avr.py` is the whole contract, and\n`_dht/decode.py` (the per-model byte decoding) needs no changes for a new port.\n\nSee `docs/` for the wire protocol, wiring diagrams, accuracy limits, sensor comparison,\nand a porting guide for a new architecture.\n\n## License\n\nMIT.",
+      "readme_type": "text/markdown",
+      "example": {
+        "name": "native",
+        "file": "main.py",
+        "source": "# DHT11 native example -- read and act on the value.\n#\n# Wiring (Arduino Uno):\n#   DHT11 DATA -> D2  (PD2), 4.7 kohm pull-up to +5V recommended\n#   DHT11 VCC  -> +5V\n#   DHT11 GND  -> GND\n#   LED: built-in on D13 (no wiring needed)\n#\n# The built-in LED lights while humidity is above 60% RH, and blinks fast on\n# a read error (bad checksum or a sensor that never answered the start signal).\nfrom pymcu.hal.gpio import Pin\nfrom pymcu.time import delay_ms\nfrom dht import DHT11\n\n\ndef main():\n    led = Pin(\"PB5\", Pin.OUT)\n    sensor = DHT11(\"PD2\")\n\n    while True:\n        sensor.measure()\n\n        if sensor.failed:\n            led.toggle()\n            delay_ms(200)\n            continue\n\n        if sensor.humidity() > 600:   # tenths of %RH\n            led.high()\n        else:\n            led.low()\n\n        delay_ms(2000)"
+      },
+      "layer": "native",
+      "adapters": [
+        "micropython"
+      ],
+      "arch": [
+        "avr"
+      ],
+      "chips": [],
+      "requires": {
+        "stdlib": ">=0.1.0a5",
+        "compiler": "",
+        "language_level": 1
+      },
+      "measured": {
+        "compiler": "0.1.0a6",
+        "date": "2026-08-17",
+        "targets": {
+          "atmega328p": {
+            "build": "ok",
+            "flash": 1014
+          },
+          "pic16f877a": {
+            "build": "failed",
+            "detail": "CompileError: DHT timing is only implemented for AVR"
+          },
+          "rp2040": {
+            "build": "failed",
+            "detail": "TypeError: cannot shift by the string \"PB5\" -- a number is expected here. This usually means a name was passed where a number belongs (for example a pin name instead of a pin number)."
+          }
+        }
+      },
+      "status": "active",
+      "warnings": []
+    },
+    {
+      "name": "neopixel",
+      "distribution": "pymcu-lib-neopixel",
+      "version": "0.2.0",
+      "summary": "WS2812 / NeoPixel addressable LED strips",
+      "repository": "https://github.com/PyMCU/pymcu-lib-neopixel",
+      "license": "MIT",
+      "categories": [
+        "display",
+        "led"
+      ],
+      "provides": [
+        "neopixel",
+        "_neopixel"
+      ],
+      "readme": "# pymcu-lib-neopixel\n\nWS2812 / NeoPixel addressable LED strips for [PyMCU](https://pymcu.org) \u2014 compiled\nto native machine code, with no interpreter on the chip.\n\n```bash\npymcu install neopixel\n```\n\n## The same strip, three APIs\n\nWhich one you get depends on the `stdlib` layer your project declares. The import is\nalways `neopixel`.\n\n**Native** (`stdlib` unset):\n\n```python\nfrom neopixel import NeoPixel\n\nstrip = NeoPixel(\"PD6\", 8)\nstrip[0] = (255, 0, 0)\nstrip.show()\n```\n\n**MicroPython** (`stdlib = [\"micropython\"]`) \u2014 a MicroPython script, unchanged:\n\n```python\nfrom machine import Pin\nfrom neopixel import NeoPixel\n\nnp = NeoPixel(Pin(6), 8)\nnp[0] = (255, 0, 0)\nnp.write()\n```\n\n**CircuitPython** (`stdlib = [\"circuitpython\"]`) \u2014 a CircuitPython script, unchanged:\n\n```python\nimport board\nimport neopixel\n\npixels = neopixel.NeoPixel(board.D6, 8, auto_write=False)\npixels.fill((0, 32, 0))\npixels.show()\n```\n\nNone of those three files contains a single conditional: the layer adapters are plain\nPython written against each API as it is documented upstream. Everything that has to\nknow about a chip lives in one private module, `_neopixel.core`, and the compiler folds\nit away.\n\n## Cost\n\nColours live in a per-strip SRAM framebuffer, 3 bytes per pixel in WS2812 wire order \u2014\n24 bytes for a strip of 8, and nothing else. Every method is `@inline`, so no object is\nallocated on the device and no method call survives compilation.\n\nMeasured figures per chip are published in the\n[library index](https://libraries.pymcu.org/index.json), and the flash cost of every\nexample in this repo is in [docs/Getting-started.md](docs/Getting-started.md).\n\n## Supported hardware\n\nWS2812 / WS2812B / NeoPixel strips on **AVR** (ATmega328P and friends) at 16 MHz, on\npins `PB0`-`PB5` and `PD2`-`PD7`. `show()` / `write()` disables interrupts for the\nduration of the transmission and restores them afterwards, since WS2812 bit timing has\nno clock line to resynchronize against \u2014 see\n[docs/How-it-works.md](docs/How-it-works.md#why-interrupts-are-disabled).\n\nBit timing (750 ns / 437.5 ns high pulses, inside both the WS2812 and WS2812B\ndatasheet windows) is verified by `tests/test_timing.py`, which compiles a probe\nprogram and measures it cycle-by-cycle on the `avr8sharp` AVR emulator \u2014 not yet\nverified against a real strip on a logic analyzer. One pin, `PB0`, is not yet covered\nby this fix and should be avoided until it is. See\n[docs/How-it-works.md](docs/How-it-works.md#bit-timing-measured-on-the-emulator-not-derived-from-source)\nfor the measured numbers, the `PB0` gap, and how the numbers were obtained.\n\nOther architectures raise a compile-time error rather than returning something that\nlooks like it worked. Ports are welcome: `_neopixel/avr.py` is the whole contract \u2014\nsee [docs/Porting-to-a-new-architecture.md](docs/Porting-to-a-new-architecture.md).\n\n## Examples\n\nFive complete, buildable PyMCU projects live under\n[`examples/`](examples/): the native,\nMicroPython and CircuitPython APIs doing the same fill-and-blink, plus a per-pixel\ncolour wipe and an `auto_write` demo. See\n[docs/Getting-started.md](docs/Getting-started.md) for how to build them and their\nmeasured flash cost.\n\n## Documentation\n\n- [docs/Home.md](docs/Home.md) \u2014 start here\n- [docs/Getting-started.md](docs/Getting-started.md)\n- [docs/The-three-APIs.md](docs/The-three-APIs.md)\n- [docs/How-it-works.md](docs/How-it-works.md)\n- [docs/Porting-to-a-new-architecture.md](docs/Porting-to-a-new-architecture.md)\n- [docs/Troubleshooting.md](docs/Troubleshooting.md)\n\n## License\n\nMIT.",
+      "readme_type": "text/markdown",
+      "example": {
+        "name": "basic",
+        "file": "main.py",
+        "source": "from neopixel import NeoPixel\nfrom pymcu.time import delay_ms\n\n\ndef main():\n    strip = NeoPixel(\"PD6\", 8)\n    while True:\n        strip.fill((32, 0, 0))\n        strip.show()\n        delay_ms(500)\n        strip.fill((0, 32, 0))\n        strip.show()\n        delay_ms(500)"
+      },
+      "layer": "native",
+      "adapters": [
+        "micropython",
+        "circuitpython"
+      ],
+      "arch": [
+        "avr"
+      ],
+      "chips": [],
+      "requires": {
+        "stdlib": ">=0.1.0a5",
+        "compiler": "",
+        "language_level": 1
+      },
+      "measured": {
+        "compiler": "0.1.0a6",
+        "date": "2026-08-17",
+        "targets": {
+          "atmega328p": {
+            "build": "ok",
+            "flash": 924
+          },
+          "pic16f877a": {
+            "build": "failed",
+            "detail": "CompileError: NeoPixel timing is only implemented for AVR"
+          },
+          "rp2040": {
+            "build": "failed",
+            "detail": "CompileError: NeoPixel timing is only implemented for AVR"
+          }
+        }
+      },
+      "status": "active",
+      "warnings": []
+    }
+  ]
 }

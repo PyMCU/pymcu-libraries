@@ -2,4 +2,7 @@
 # Add yours at any position -- the order here does not matter.
 #
 # The name is the distribution on PyPI, not the module it provides:
-#   pymcu-lib-dht11        (installs the `dht11` module)
+#   pymcu-lib-dht          (installs the `dht` module)
+
+pymcu-lib-neopixel
+pymcu-lib-dht
