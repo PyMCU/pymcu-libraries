@@ -1,12 +1,13 @@
 {
   "v": 1,
-  "generated": "2026-09-21",
-  "compiler": "0.1.0a10",
+  "generated": "2026-09-14",
+  "compiler": "0.1.0a7",
   "libraries": [
     {
+      "kind": "library",
       "name": "dht",
       "distribution": "pymcu-lib-dht",
-      "version": "0.1.1",
+      "version": "0.1.0",
       "summary": "DHT11 / DHT22 / DHT21 temperature & humidity sensor driver",
       "repository": "https://github.com/PyMCU/pymcu-lib-dht",
       "license": "MIT",
@@ -19,7 +20,7 @@
         "adafruit_dht",
         "_dht"
       ],
-      "readme": "# pymcu-lib-dht\n\nDHT-family temperature & humidity sensor driver for [PyMCU](https://pymcu.org) \u2014 DHT11,\nDHT22/AM2302, and DHT21/AM2301 \u2014 compiled to native machine code, with no interpreter\non the chip.\n\n```bash\npymcu install dht\n```\n\n## Two module names, three APIs, one driver\n\nWhich module name and shape you get depends on the `stdlib` layer your project\ndeclares. Native and MicroPython both import from `dht` \u2014 that is real MicroPython's\nown module name; CircuitPython imports from `adafruit_dht`, matching that ecosystem's\nreal name instead.\n\n**Native** (`stdlib` unset):\n\n```python\nfrom dht import DHT11, DHT22   # DHT21 is also available: an alias of DHT22\n\nsensor = DHT22(\"PD2\")\nsensor.measure()\nhumidity = sensor.humidity()        # uint16, tenths of %RH: 653 = 65.3\ntemperature = sensor.temperature()  # int16, tenths of C: -55 = -5.5\n```\n\n**MicroPython** (`stdlib = [\"micropython\"]`) \u2014 a MicroPython script, unchanged:\n\n```python\nfrom machine import Pin\nfrom dht import DHT11\n\nsensor = DHT11(Pin(2))\nsensor.measure()\nprint(sensor.humidity(), sensor.temperature())\n```\n\n**CircuitPython** (`stdlib = [\"circuitpython\"]`) \u2014 an `adafruit_dht` script, unchanged:\n\n```python\nimport board\nfrom adafruit_dht import DHT22\n\nsensor = DHT22(board.D2)\nprint(sensor.temperature, sensor.humidity)   # float, matching upstream\n```\n\nNone of those files contains a single `match __CHIP__.arch`: the layer adapters are\nplain Python written against each API as it is documented upstream. Everything that has\nto know about a chip lives in one private module, `_dht.core`, and the compiler folds\nit away; everything that has to know what a byte *means* for a given sensor model lives\nin `_dht.decode`, which needs no chip dispatch of its own.\n\n## DHT11 vs. DHT22 vs. DHT21\n\n- **DHT11** \u2014 integer %RH and C, no fractional resolution, no negative temperatures.\n  Cheapest, and the smallest to compile against (see below).\n- **DHT22/AM2302** \u2014 one decimal digit, negative temperatures, wider and more accurate\n  range.\n- **DHT21/AM2301** \u2014 the same protocol and byte layout as the DHT22. This library\n  exposes it as `DHT21 = DHT22`, a plain alias, not a second implementation.\n\nSee `docs/sensors.md` for the full comparison and `docs/protocol.md` for the byte-level\ndifferences.\n\n## Cost\n\nThe whole driver is `@inline`: no object is allocated on the device, and a read\ncompiles down to the bit-banging routine at the call site (or a single shared\nsubroutine where the compiler's outliner judges that cheaper). Nothing is held in\nSRAM between reads.\n\n`dht.py` and `compat/micropython/dht.py` report tenths as a plain `int16`/`uint16`\nrather than a `float`, on both DHT11 and DHT22: two isolated probes measured on the\nemulator put a `float`-returning driver at 4.9x the flash of an `int16`-tenths one\n(680 vs. 140 bytes) for the same logic. See `docs/accuracy.md` for the measurement.\n`adafruit_dht.py` is the one exception \u2014 it matches `adafruit_dht`'s real `float`\nsignature on purpose, since fidelity to that upstream API is the point of the module.\n\nMeasured figures per chip are published in the\n[library index](https://libraries.pymcu.org/index.json).\n\n## Supported hardware\n\nThe whole DHT family on **AVR** (ATmega328P and friends), data line on `PD2`-`PD7`.\nTiming is measured on the AVR emulator rather than assumed \u2014 see\n`tests/test_timing.py` for the start-signal and bit-decode-threshold checks.\n\nOther architectures raise a compile-time error rather than returning something that\nlooks like it worked. Ports are welcome: `_dht/avr.py` is the whole contract, and\n`_dht/decode.py` (the per-model byte decoding) needs no changes for a new port.\n\nYour firmware may use any name it likes at module level: the driver's own parameters\nare ordinary words (`mask`, `bit`, `start_low_ms`), and a global that collides with\none of them no longer reaches inside. That took a compiler fix, so the suite measures\nit rather than assuming it \u2014 see `tests/test_timing.py`.\n\nSee `docs/` for the wire protocol, wiring diagrams, accuracy limits, sensor comparison,\nand a porting guide for a new architecture.\n\n## License\n\nMIT.",
+      "readme": "# pymcu-lib-dht\n\nDHT-family temperature & humidity sensor driver for [PyMCU](https://pymcu.org) \u2014 DHT11,\nDHT22/AM2302, and DHT21/AM2301 \u2014 compiled to native machine code, with no interpreter\non the chip.\n\n```bash\npymcu install dht\n```\n\n## Two module names, three APIs, one driver\n\nWhich module name and shape you get depends on the `stdlib` layer your project\ndeclares. Native and MicroPython both import from `dht` \u2014 that is real MicroPython's\nown module name; CircuitPython imports from `adafruit_dht`, matching that ecosystem's\nreal name instead.\n\n**Native** (`stdlib` unset):\n\n```python\nfrom dht import DHT11, DHT22   # DHT21 is also available: an alias of DHT22\n\nsensor = DHT22(\"PD2\")\nsensor.measure()\nhumidity = sensor.humidity()        # uint16, tenths of %RH: 653 = 65.3\ntemperature = sensor.temperature()  # int16, tenths of C: -55 = -5.5\n```\n\n**MicroPython** (`stdlib = [\"micropython\"]`) \u2014 a MicroPython script, unchanged:\n\n```python\nfrom machine import Pin\nfrom dht import DHT11\n\nsensor = DHT11(Pin(2))\nsensor.measure()\nprint(sensor.humidity(), sensor.temperature())\n```\n\n**CircuitPython** (`stdlib = [\"circuitpython\"]`) \u2014 an `adafruit_dht` script, unchanged:\n\n```python\nimport board\nfrom adafruit_dht import DHT22\n\nsensor = DHT22(board.D2)\nprint(sensor.temperature, sensor.humidity)   # float, matching upstream\n```\n\nNone of those files contains a single `match __CHIP__.arch`: the layer adapters are\nplain Python written against each API as it is documented upstream. Everything that has\nto know about a chip lives in one private module, `_dht.core`, and the compiler folds\nit away; everything that has to know what a byte *means* for a given sensor model lives\nin `_dht.decode`, which needs no chip dispatch of its own.\n\n## DHT11 vs. DHT22 vs. DHT21\n\n- **DHT11** \u2014 integer %RH and C, no fractional resolution, no negative temperatures.\n  Cheapest, and the smallest to compile against (see below).\n- **DHT22/AM2302** \u2014 one decimal digit, negative temperatures, wider and more accurate\n  range.\n- **DHT21/AM2301** \u2014 the same protocol and byte layout as the DHT22. This library\n  exposes it as `DHT21 = DHT22`, a plain alias, not a second implementation.\n\nSee `docs/sensors.md` for the full comparison and `docs/protocol.md` for the byte-level\ndifferences.\n\n## Cost\n\nThe whole driver is `@inline`: no object is allocated on the device, and a read\ncompiles down to the bit-banging routine at the call site (or a single shared\nsubroutine where the compiler's outliner judges that cheaper). Nothing is held in\nSRAM between reads.\n\n`dht.py` and `compat/micropython/dht.py` report tenths as a plain `int16`/`uint16`\nrather than a `float`, on both DHT11 and DHT22: two isolated probes measured on the\nemulator put a `float`-returning driver at 4.9x the flash of an `int16`-tenths one\n(680 vs. 140 bytes) for the same logic. See `docs/accuracy.md` for the measurement.\n`adafruit_dht.py` is the one exception \u2014 it matches `adafruit_dht`'s real `float`\nsignature on purpose, since fidelity to that upstream API is the point of the module.\n\nMeasured figures per chip are published in the\n[library index](https://libraries.pymcu.org/index.json).\n\n## Supported hardware\n\nThe whole DHT family on **AVR** (ATmega328P and friends), data line on `PD2`-`PD7`.\nTiming is measured on the AVR emulator rather than assumed \u2014 see\n`tests/test_timing.py` for the start-signal and bit-decode-threshold checks.\n\nOther architectures raise a compile-time error rather than returning something that\nlooks like it worked. Ports are welcome: `_dht/avr.py` is the whole contract, and\n`_dht/decode.py` (the per-model byte decoding) needs no changes for a new port.\n\nSee `docs/` for the wire protocol, wiring diagrams, accuracy limits, sensor comparison,\nand a porting guide for a new architecture.\n\n## License\n\nMIT.",
       "readme_type": "text/markdown",
       "example": {
         "name": "native",
@@ -40,19 +41,19 @@
         "language_level": 1
       },
       "measured": {
-        "compiler": "0.1.0a10",
-        "date": "2026-09-21",
+        "compiler": "0.1.0a7",
+        "date": "2026-08-17",
         "targets": {
           "atmega328p": {
             "build": "ok",
-            "flash": 990
+            "flash": 1014
           },
           "pic16f877a": {
-            "build": "unsupported",
+            "build": "failed",
             "detail": "CompileError: DHT timing is only implemented for AVR"
           },
           "rp2040": {
-            "build": "unsupported",
+            "build": "failed",
             "detail": "TypeError: cannot shift by the string \"PB5\" -- a number is expected here. This usually means a name was passed where a number belongs (for example a pin name instead of a pin number)."
           }
         }
@@ -61,6 +62,7 @@
       "warnings": []
     },
     {
+      "kind": "library",
       "name": "neopixel",
       "distribution": "pymcu-lib-neopixel",
       "version": "0.2.0",
@@ -97,20 +99,53 @@
         "language_level": 1
       },
       "measured": {
-        "compiler": "0.1.0a10",
-        "date": "2026-09-21",
+        "compiler": "0.1.0a7",
+        "date": "2026-08-17",
         "targets": {
           "atmega328p": {
             "build": "ok",
-            "flash": 892
+            "flash": 924
           },
           "pic16f877a": {
-            "build": "unsupported",
+            "build": "failed",
             "detail": "CompileError: NeoPixel timing is only implemented for AVR"
           },
           "rp2040": {
-            "build": "unsupported",
+            "build": "failed",
             "detail": "CompileError: NeoPixel timing is only implemented for AVR"
+          }
+        }
+      },
+      "status": "active",
+      "warnings": []
+    },
+    {
+      "kind": "upstream",
+      "name": "adafruit_hcsr04",
+      "distribution": "adafruit-circuitpython-hcsr04",
+      "version": "0.4.25",
+      "summary": "CircuitPython library for controlling HC-SR04 ultrasonic range sensors.",
+      "repository": "https://github.com/adafruit/Adafruit_CircuitPython_HCSR04",
+      "license": "MIT",
+      "provides": [
+        "adafruit_hcsr04"
+      ],
+      "layer": "circuitpython",
+      "measured": {
+        "compiler": "0.1.0a10",
+        "date": "2026-09-14",
+        "targets": {
+          "atmega328p": {
+            "build": "ok",
+            "flash": 4062
+          },
+          "pic16f877a": {
+            "build": "unmeasured",
+            "detail": "backend for pic16f877a not installed"
+          },
+          "rp2040": {
+            "build": "unmeasured",
+            "detail": "backend for rp2040 not installed"
           }
         }
       },
