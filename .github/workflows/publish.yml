@@ -73,7 +73,10 @@ jobs:
         run: |
           uv venv .index-venv
           uv pip install --python .index-venv --prerelease=allow "pymcu-compiler[all]"
-          grep -v '^\s*#' libraries.txt | grep -v '^\s*$' | while read -r dist; do
+          # An `upstream` line carries the distribution in its second field and
+          # metadata after it; only the distribution is installable.
+          grep -v '^\s*#' libraries.txt | grep -v '^\s*$' \
+            | awk '{ print ($1 == "upstream") ? $2 : $1 }' | while read -r dist; do
             uv pip install --python .index-venv --prerelease=allow "$dist"
           done
 
