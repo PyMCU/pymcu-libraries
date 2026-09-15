@@ -7,9 +7,10 @@ distributions that are known to be PyMCU libraries, and a measured record of
 which chips each one actually builds for.
 
 ```
-libraries.txt   one distribution per line -- the whole submission
-index.json      generated; do not edit by hand
-deploy/         the Worker that serves the index from R2
+libraries.txt          one distribution per line -- the whole submission
+upstream-examples/     measurement programs for upstream entries (see below)
+index.json             generated; do not edit by hand
+deploy/                the Worker that serves the index from R2
 ```
 
 ## Submitting a library
@@ -37,6 +38,45 @@ version of everything listed and measures it again, so an entry says what builds
 *today* rather than what built the day it was submitted -- and a library that
 stops building against a new compiler is marked `broken` without anyone filing
 an issue.
+
+## Upstream libraries
+
+Some libraries are worth listing without asking their author to adopt PyMCU's
+manifest at all: an existing CircuitPython or MicroPython package on PyPI, plain
+Python with no interpreter-only surface, needs nothing more than the index
+saying what it provides. An `upstream` line in `libraries.txt` does that,
+naming the module(s), the stdlib layer it is written against, and a
+measurement program:
+
+```
+upstream <distribution> provides=<module>[,<module>...] layer=<native|micropython|circuitpython> example=<path> [name=<name>]
+```
+
+`example` is a path, relative to this repository's root, to a copy of the
+library's own example, committed under `upstream-examples/<distribution>/`.
+That copy exists only to measure the library; this repository never carries a
+copy of the library's own code, staged or otherwise, only of the one file
+compiled to test it.
+
+**Unlike a regular submission, adding an upstream entry is a maintainer
+action**, not something the library's own author opens a PR for -- there is no
+manifest for them to author in the first place. A maintainer:
+
+1. Confirms the distribution is plain Python with no PyMCU-specific surface,
+   and that its own example actually exercises the library (constructs the
+   object, calls a method) rather than merely importing it.
+2. Commits a copy of that example under `upstream-examples/<distribution>/`.
+3. Adds the `upstream` line to `libraries.txt`.
+
+CI measures it exactly like a regular submission: one chip per architecture,
+with the declared layer enabled. There is no `supports.arch` to compare the
+result against, since there is nothing here that could have gotten out of
+sync with a manifest that does not exist.
+
+An upstream entry is re-measured on the same weekly schedule as everything
+else, and is removed from `libraries.txt` (by a maintainer, again) once it
+stops building -- there being no author to notify plays no part in when that
+happens.
 
 ## How the index is published
 
