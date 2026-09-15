@@ -3,6 +3,20 @@
 #
 # The name is the distribution on PyPI, not the module it provides:
 #   pymcu-lib-dht          (installs the `dht` module)
+#
+# An "upstream" line lists a third-party distribution that ships no PyMCU
+# manifest of its own -- the index vouches for it and measures it, but never
+# copies its code. It carries what the distribution does not declare itself:
+#   upstream <distribution> provides=<module>[,<module>...] layer=<native|micropython|circuitpython> example=<path> [name=<name>]
+#     distribution  the PyPI distribution name
+#     provides      the top-level module(s) it installs (comma-separated)
+#     layer         which stdlib flavor a project must declare (default: native)
+#     example       a path, relative to this repository's root, to a copy of
+#                   the library's own example committed under
+#                   upstream-examples/<distribution>/ -- the measurement
+#                   program, kept only for that; never a copy of the library
+#     name          optional; defaults to the first provides= module
 
 pymcu-lib-neopixel
 pymcu-lib-dht
+upstream adafruit-circuitpython-hcsr04 provides=adafruit_hcsr04 layer=circuitpython example=upstream-examples/adafruit-circuitpython-hcsr04/hcsr04_simpletest.py
