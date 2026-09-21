@@ -71,7 +71,10 @@ manifest for them to author in the first place. A maintainer:
 CI measures it exactly like a regular submission: one chip per architecture,
 with the declared layer enabled. There is no `supports.arch` to compare the
 result against, since there is nothing here that could have gotten out of
-sync with a manifest that does not exist.
+sync with a manifest that does not exist. An upstream entry whose imports are
+other upstream entries is measured with them in scope -- the measurement
+index names every submission of the run -- so list the dependency entries
+first.
 
 An upstream entry is re-measured on the same weekly schedule as everything
 else, and is removed from `libraries.txt` (by a maintainer, again) once it

@@ -22,3 +22,5 @@ pymcu-lib-dht
 upstream adafruit-circuitpython-hcsr04 provides=adafruit_hcsr04 layer=circuitpython example=upstream-examples/adafruit-circuitpython-hcsr04/hcsr04_simpletest.py
 upstream adafruit-circuitpython-pixelbuf provides=adafruit_pixelbuf layer=circuitpython example=upstream-examples/adafruit-circuitpython-pixelbuf/pixelbuf_simpletest.py
 upstream adafruit-circuitpython-framebuf provides=adafruit_framebuf layer=circuitpython example=upstream-examples/adafruit-circuitpython-framebuf/framebuf_simpletest.py
+upstream adafruit-circuitpython-busdevice provides=adafruit_bus_device layer=circuitpython example=upstream-examples/adafruit-circuitpython-busdevice/busdevice_i2c_probe.py
+upstream adafruit-circuitpython-ssd1306 provides=adafruit_ssd1306 layer=circuitpython example=upstream-examples/adafruit-circuitpython-ssd1306/ssd1306_simpletest.py
