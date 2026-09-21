@@ -137,7 +137,7 @@
         "targets": {
           "atmega328p": {
             "build": "ok",
-            "flash": 3114
+            "flash": 3026
           },
           "pic16f877a": {
             "build": "unmeasured",
@@ -170,7 +170,7 @@
         "targets": {
           "atmega328p": {
             "build": "failed",
-            "detail": "SyntaxError: Expected ')'"
+            "detail": "CompileError: a runtime-sized bytearray(n) needs the pymcu.arena allocator; `pymcu build` injects it automatically -- if invoking the compiler by hand, add `import pymcu.arena as _pymcu_arena` to the "
           },
           "pic16f877a": {
             "build": "unmeasured",
@@ -204,6 +204,72 @@
           "atmega328p": {
             "build": "ok",
             "flash": 442
+          },
+          "pic16f877a": {
+            "build": "unmeasured",
+            "detail": "backend for pic16f877a not installed"
+          },
+          "rp2040": {
+            "build": "unmeasured",
+            "detail": "backend for rp2040 not installed"
+          }
+        }
+      },
+      "status": "active",
+      "warnings": []
+    },
+    {
+      "kind": "upstream",
+      "name": "adafruit_bus_device",
+      "distribution": "adafruit-circuitpython-busdevice",
+      "version": "5.2.17",
+      "summary": "CircuitPython bus device classes to manage bus sharing.",
+      "repository": "https://github.com/adafruit/Adafruit_CircuitPython_BusDevice",
+      "license": "MIT",
+      "provides": [
+        "adafruit_bus_device"
+      ],
+      "layer": "circuitpython",
+      "measured": {
+        "compiler": "0.1.0b1",
+        "date": "2026-09-21",
+        "targets": {
+          "atmega328p": {
+            "build": "ok",
+            "flash": 796
+          },
+          "pic16f877a": {
+            "build": "unmeasured",
+            "detail": "backend for pic16f877a not installed"
+          },
+          "rp2040": {
+            "build": "unmeasured",
+            "detail": "backend for rp2040 not installed"
+          }
+        }
+      },
+      "status": "active",
+      "warnings": []
+    },
+    {
+      "kind": "upstream",
+      "name": "adafruit_ssd1306",
+      "distribution": "adafruit-circuitpython-ssd1306",
+      "version": "2.12.24",
+      "summary": "CircuitPython library for SSD1306 OLED displays.",
+      "repository": "https://github.com/adafruit/Adafruit_CircuitPython_SSD1306",
+      "license": "MIT",
+      "provides": [
+        "adafruit_ssd1306"
+      ],
+      "layer": "circuitpython",
+      "measured": {
+        "compiler": "0.1.0b1",
+        "date": "2026-09-21",
+        "targets": {
+          "atmega328p": {
+            "build": "ok",
+            "flash": 6244
           },
           "pic16f877a": {
             "build": "unmeasured",
