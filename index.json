@@ -1,10 +1,9 @@
 {
   "v": 1,
-  "generated": "2026-09-21",
-  "compiler": "0.1.0b1",
+  "generated": "2026-09-26",
+  "compiler": "0.1.0a10",
   "libraries": [
     {
-      "kind": "library",
       "name": "dht",
       "distribution": "pymcu-lib-dht",
       "version": "0.1.1",
@@ -41,20 +40,20 @@
         "language_level": 1
       },
       "measured": {
-        "compiler": "0.1.0b1",
-        "date": "2026-09-21",
+        "compiler": "0.1.0a10",
+        "date": "2026-09-26",
         "targets": {
           "atmega328p": {
             "build": "ok",
-            "flash": 924
+            "flash": 990
           },
           "pic16f877a": {
-            "build": "unmeasured",
-            "detail": "backend for pic16f877a not installed"
+            "build": "unsupported",
+            "detail": "CompileError: DHT timing is only implemented for AVR"
           },
           "rp2040": {
-            "build": "unmeasured",
-            "detail": "backend for rp2040 not installed"
+            "build": "unsupported",
+            "detail": "TypeError: cannot shift by the string \"PB5\" -- a number is expected here. This usually means a name was passed where a number belongs (for example a pin name instead of a pin number)."
           }
         }
       },
@@ -62,7 +61,6 @@
       "warnings": []
     },
     {
-      "kind": "library",
       "name": "neopixel",
       "distribution": "pymcu-lib-neopixel",
       "version": "0.2.0",
@@ -99,185 +97,20 @@
         "language_level": 1
       },
       "measured": {
-        "compiler": "0.1.0b1",
-        "date": "2026-09-21",
+        "compiler": "0.1.0a10",
+        "date": "2026-09-26",
         "targets": {
           "atmega328p": {
             "build": "ok",
             "flash": 892
           },
           "pic16f877a": {
-            "build": "unmeasured",
-            "detail": "backend for pic16f877a not installed"
+            "build": "unsupported",
+            "detail": "CompileError: NeoPixel timing is only implemented for AVR"
           },
           "rp2040": {
-            "build": "unmeasured",
-            "detail": "backend for rp2040 not installed"
-          }
-        }
-      },
-      "status": "active",
-      "warnings": []
-    },
-    {
-      "kind": "upstream",
-      "name": "adafruit_hcsr04",
-      "distribution": "adafruit-circuitpython-hcsr04",
-      "version": "0.4.25",
-      "summary": "CircuitPython library for controlling HC-SR04 ultrasonic range sensors.",
-      "repository": "https://github.com/adafruit/Adafruit_CircuitPython_HCSR04",
-      "license": "MIT",
-      "provides": [
-        "adafruit_hcsr04"
-      ],
-      "layer": "circuitpython",
-      "measured": {
-        "compiler": "0.1.0b1",
-        "date": "2026-09-21",
-        "targets": {
-          "atmega328p": {
-            "build": "ok",
-            "flash": 3026
-          },
-          "pic16f877a": {
-            "build": "unmeasured",
-            "detail": "backend for pic16f877a not installed"
-          },
-          "rp2040": {
-            "build": "unmeasured",
-            "detail": "backend for rp2040 not installed"
-          }
-        }
-      },
-      "status": "active",
-      "warnings": []
-    },
-    {
-      "kind": "upstream",
-      "name": "adafruit_pixelbuf",
-      "distribution": "adafruit-circuitpython-pixelbuf",
-      "version": "2.1.0",
-      "summary": "A pure Python implementation of adafruit_pixelbuf for smaller boards.",
-      "repository": "https://github.com/adafruit/Adafruit_CircuitPython_Pixelbuf.git",
-      "license": "MIT",
-      "provides": [
-        "adafruit_pixelbuf"
-      ],
-      "layer": "circuitpython",
-      "measured": {
-        "compiler": "0.1.0b1",
-        "date": "2026-09-21",
-        "targets": {
-          "atmega328p": {
-            "build": "failed",
-            "detail": "CompileError: a runtime-sized bytearray(n) needs the pymcu.arena allocator; `pymcu build` injects it automatically -- if invoking the compiler by hand, add `import pymcu.arena as _pymcu_arena` to the "
-          },
-          "pic16f877a": {
-            "build": "unmeasured",
-            "detail": "backend for pic16f877a not installed"
-          },
-          "rp2040": {
-            "build": "unmeasured",
-            "detail": "backend for rp2040 not installed"
-          }
-        }
-      },
-      "status": "broken",
-      "warnings": []
-    },
-    {
-      "kind": "upstream",
-      "name": "adafruit_framebuf",
-      "distribution": "adafruit-circuitpython-framebuf",
-      "version": "1.6.12",
-      "summary": "CircuitPython frambuf module, based on the Python frambuf module.",
-      "repository": "https://github.com/adafruit/Adafruit_CircuitPython_framebuf",
-      "license": "MIT",
-      "provides": [
-        "adafruit_framebuf"
-      ],
-      "layer": "circuitpython",
-      "measured": {
-        "compiler": "0.1.0b1",
-        "date": "2026-09-21",
-        "targets": {
-          "atmega328p": {
-            "build": "ok",
-            "flash": 442
-          },
-          "pic16f877a": {
-            "build": "unmeasured",
-            "detail": "backend for pic16f877a not installed"
-          },
-          "rp2040": {
-            "build": "unmeasured",
-            "detail": "backend for rp2040 not installed"
-          }
-        }
-      },
-      "status": "active",
-      "warnings": []
-    },
-    {
-      "kind": "upstream",
-      "name": "adafruit_bus_device",
-      "distribution": "adafruit-circuitpython-busdevice",
-      "version": "5.2.17",
-      "summary": "CircuitPython bus device classes to manage bus sharing.",
-      "repository": "https://github.com/adafruit/Adafruit_CircuitPython_BusDevice",
-      "license": "MIT",
-      "provides": [
-        "adafruit_bus_device"
-      ],
-      "layer": "circuitpython",
-      "measured": {
-        "compiler": "0.1.0b1",
-        "date": "2026-09-21",
-        "targets": {
-          "atmega328p": {
-            "build": "ok",
-            "flash": 796
-          },
-          "pic16f877a": {
-            "build": "unmeasured",
-            "detail": "backend for pic16f877a not installed"
-          },
-          "rp2040": {
-            "build": "unmeasured",
-            "detail": "backend for rp2040 not installed"
-          }
-        }
-      },
-      "status": "active",
-      "warnings": []
-    },
-    {
-      "kind": "upstream",
-      "name": "adafruit_ssd1306",
-      "distribution": "adafruit-circuitpython-ssd1306",
-      "version": "2.12.24",
-      "summary": "CircuitPython library for SSD1306 OLED displays.",
-      "repository": "https://github.com/adafruit/Adafruit_CircuitPython_SSD1306",
-      "license": "MIT",
-      "provides": [
-        "adafruit_ssd1306"
-      ],
-      "layer": "circuitpython",
-      "measured": {
-        "compiler": "0.1.0b1",
-        "date": "2026-09-21",
-        "targets": {
-          "atmega328p": {
-            "build": "ok",
-            "flash": 6244
-          },
-          "pic16f877a": {
-            "build": "unmeasured",
-            "detail": "backend for pic16f877a not installed"
-          },
-          "rp2040": {
-            "build": "unmeasured",
-            "detail": "backend for rp2040 not installed"
+            "build": "unsupported",
+            "detail": "CompileError: NeoPixel timing is only implemented for AVR"
           }
         }
       },
