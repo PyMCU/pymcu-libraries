@@ -1,9 +1,10 @@
 {
   "v": 1,
   "generated": "2026-10-05",
-  "compiler": "0.1.0a10",
+  "compiler": "0.1.0b1",
   "libraries": [
     {
+      "kind": "library",
       "name": "dht",
       "distribution": "pymcu-lib-dht",
       "version": "0.1.1",
@@ -40,12 +41,12 @@
         "language_level": 1
       },
       "measured": {
-        "compiler": "0.1.0a10",
+        "compiler": "0.1.0b1",
         "date": "2026-10-05",
         "targets": {
           "atmega328p": {
             "build": "ok",
-            "flash": 990
+            "flash": 974
           },
           "pic16f877a": {
             "build": "unsupported",
@@ -53,7 +54,7 @@
           },
           "rp2040": {
             "build": "unsupported",
-            "detail": "TypeError: cannot shift by the string \"PB5\" -- a number is expected here. This usually means a name was passed where a number belongs (for example a pin name instead of a pin number)."
+            "detail": "CompileError: DHT timing is only implemented for AVR"
           }
         }
       },
@@ -61,6 +62,7 @@
       "warnings": []
     },
     {
+      "kind": "library",
       "name": "neopixel",
       "distribution": "pymcu-lib-neopixel",
       "version": "0.2.0",
@@ -97,12 +99,12 @@
         "language_level": 1
       },
       "measured": {
-        "compiler": "0.1.0a10",
+        "compiler": "0.1.0b1",
         "date": "2026-10-05",
         "targets": {
           "atmega328p": {
             "build": "ok",
-            "flash": 892
+            "flash": 836
           },
           "pic16f877a": {
             "build": "unsupported",
